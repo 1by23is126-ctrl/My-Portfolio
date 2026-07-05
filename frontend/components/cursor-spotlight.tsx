@@ -27,10 +27,11 @@ export function CursorSpotlight() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[12] h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+      className="pointer-events-none fixed left-0 top-0 z-[3] h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen"
       style={{
         x: sx,
         y: sy,
+        willChange: 'transform, opacity',
         background:
           'radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(212,175,55,0.03) 35%, transparent 70%)',
       }}
