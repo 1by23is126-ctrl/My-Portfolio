@@ -117,7 +117,7 @@ export function About() {
                 className="border-l border-white/10 pl-4"
               >
                 <p className="font-display text-3xl font-bold text-foreground sm:text-4xl">
-                  <Counter value={s.value} suffix={s.suffix} decimals={(s as { decimals?: number }).decimals ?? 0} />
+                  <Counter value={s.value} suffix={s.suffix} decimals={s.decimals ?? 0} />
                 </p>
                 <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">{s.label}</p>
               </motion.div>

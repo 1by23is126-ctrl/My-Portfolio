@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import {
   motion,
   useMotionValue,
+  useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
@@ -16,8 +17,8 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 // Timings — sequence: name → tagline (roles) → subtitle → buttons ~150ms apart
 const NAME_START = 0.2;
-const NAME_LETTERS_STAGGER = 0.05; // 50ms per letter (40-60ms range)
-const AFTER_NAME = NAME_START + 'Mrinank'.length * NAME_LETTERS_STAGGER + 0.35; // ~0.9s
+const NAME_LETTERS_STAGGER = 0.05;
+const AFTER_NAME = 1.65;
 const TAGLINE_DELAY = AFTER_NAME + 0.15;    // name → tagline
 const SUBTITLE_DELAY = TAGLINE_DELAY + 0.15; // tagline → subtitle
 const BUTTONS_DELAY = SUBTITLE_DELAY + 0.15; // subtitle → buttons
@@ -31,11 +32,12 @@ const nameContainer: Variants = {
 };
 
 const letterVariant: Variants = {
-  hidden: { y: '110%', opacity: 0 },
+  hidden: { y: 20, opacity: 0, filter: 'blur(8px)' },
   visible: {
-    y: '0%',
+    y: 0,
     opacity: 1,
-    transition: { duration: 0.75, ease: EASE },
+    filter: 'blur(0px)',
+    transition: { duration: 1, ease: EASE },
   },
 };
 
@@ -65,6 +67,7 @@ function SplitLetters({
           <motion.span
             variants={variants}
             className="inline-block will-change-transform"
+            style={{ transform: 'translate3d(0, 0, 0)' }}
           >
             {ch === ' ' ? '\u00A0' : ch}
           </motion.span>
@@ -76,7 +79,7 @@ function SplitLetters({
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
-  const nameWrapperRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   // Magnetic tilt for name — driven by pointer position within hero
   const tiltX = useMotionValue(0); // rotateX target (deg)
@@ -95,7 +98,7 @@ export function Hero() {
   useEffect(() => {
     const el = heroRef.current;
     if (!el) return;
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (shouldReduceMotion) {
       return;
     }
     const MAX_DEG = 5; // 4-6deg range
@@ -119,13 +122,13 @@ export function Hero() {
       el.removeEventListener('mousemove', handle);
       el.removeEventListener('mouseleave', reset);
     };
-  }, [tiltX, tiltY]);
+  }, [shouldReduceMotion, tiltX, tiltY]);
 
   return (
     <motion.section
       ref={heroRef}
       id="home"
-      style={{ scale: heroScale, opacity: heroOpacity }}
+      style={{ scale: shouldReduceMotion ? 1 : heroScale, opacity: shouldReduceMotion ? 1 : heroOpacity }}
       className="hero-root relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-24 pb-16"
       data-testid="hero-section"
     >
@@ -148,12 +151,13 @@ export function Hero() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-1/2 z-[2] -translate-y-1/2 select-none flex justify-center"
       >
-        <span
-          className="hero-ghost-name text-outline whitespace-nowrap font-display font-bold leading-none tracking-tighter"
+        <div
+          className="hero-ghost-wrap relative whitespace-nowrap font-display font-bold leading-none tracking-tighter"
           style={{ fontSize: 'clamp(8rem, 28vw, 26rem)' }}
         >
-          {profile.firstName.toUpperCase()}
-        </span>
+          <span className="hero-ghost-main">{profile.firstName.toUpperCase()}</span>
+          <span className="hero-ghost-blur absolute inset-0">{profile.firstName.toUpperCase()}</span>
+        </div>
       </div>
 
       {/* === Availability badge (breathing dot glow) === */}
@@ -173,40 +177,36 @@ export function Hero() {
 
       {/* === NAME (letter-by-letter, magnetic tilt) === */}
       <div
-        ref={nameWrapperRef}
-        className="relative z-10 flex flex-col items-center"
+        className="hero-name-hover relative z-10 flex flex-col items-center"
         style={{ perspective: '1200px' }}
         data-testid="hero-name-wrapper"
       >
         <motion.div
           style={{
-            rotateX: tiltXSpring,
-            rotateY: tiltYSpring,
+            rotateX: shouldReduceMotion ? 0 : tiltXSpring,
+            rotateY: shouldReduceMotion ? 0 : tiltYSpring,
             transformStyle: 'preserve-3d',
           }}
-          className="relative will-change-transform"
+          className="hero-name-gradient relative will-change-transform"
         >
           <motion.h1
             variants={nameContainer}
             initial="hidden"
             animate="visible"
-            className="relative font-display font-bold leading-[0.9] tracking-tight text-foreground"
-            style={{ fontSize: 'clamp(3.5rem, 14vw, 12rem)' }}
+            className="hero-name relative font-display font-bold leading-[0.9] text-foreground"
+            style={{ fontSize: 'clamp(3.5rem, 14vw, 12rem)', letterSpacing: '-0.035em' }}
             data-testid="hero-name-first"
           >
             <span className="block overflow-hidden">
               <SplitLetters text={profile.firstName} />
             </span>
 
-            {/* Gold sweep overlay (existing accent) */}
             <span
               aria-hidden
-              className="animate-gold-sweep pointer-events-none absolute inset-0 bg-clip-text text-transparent"
+              className="hero-name-shimmer pointer-events-none absolute inset-0"
               style={{
-                backgroundImage:
-                  'linear-gradient(105deg, transparent 40%, rgba(245,215,110,0.85) 50%, transparent 60%)',
-                backgroundSize: '200% auto',
                 fontSize: 'clamp(3.5rem, 14vw, 12rem)',
+                letterSpacing: '-0.035em',
               }}
             >
               <span className="block">
@@ -223,8 +223,8 @@ export function Hero() {
             variants={lastNameContainer}
             initial="hidden"
             animate="visible"
-            className="mt-1 font-display font-bold leading-none tracking-[0.15em] text-gold text-center"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 3.5rem)' }}
+            className="hero-name-sub mt-1 font-display font-bold leading-none text-gold text-center"
+            style={{ fontSize: 'clamp(1.75rem, 5vw, 3.5rem)', letterSpacing: '0.18em' }}
             data-testid="hero-name-last"
           >
             <span className="inline-flex overflow-hidden">
@@ -329,8 +329,8 @@ export function Hero() {
       >
         <div className="flex h-10 w-6 items-start justify-center rounded-full border border-white/15 p-1.5">
           <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            animate={shouldReduceMotion ? { y: 0 } : { y: [0, 12, 0] }}
+            transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
             className="h-1.5 w-1.5 rounded-full bg-gold"
           />
         </div>
