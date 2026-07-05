@@ -153,7 +153,7 @@ export function Hero() {
       >
         <div
           className="hero-ghost-wrap relative whitespace-nowrap font-display font-bold leading-none tracking-tighter"
-          style={{ fontSize: 'clamp(8rem, 28vw, 26rem)' }}
+          style={{ fontSize: 'clamp(7.25rem, 24vw, 22rem)' }}
         >
           <span className="hero-ghost-main">{profile.firstName.toUpperCase()}</span>
           <span className="hero-ghost-blur absolute inset-0">{profile.firstName.toUpperCase()}</span>

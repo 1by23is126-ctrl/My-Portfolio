@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Command } from 'cmdk';
+import { Command as CommandMenu } from 'cmdk';
 import {
   ArrowUpRight,
+  Command,
   Home,
   User,
   Code2,
@@ -24,20 +25,20 @@ type Item = {
   group: string;
 };
 
-export function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
+export function CommandPalette({ open, setOpen }: { open: boolean; setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setOpen(!open);
+        setOpen((prev) => !prev);
       }
       if (e.key === 'Escape') setOpen(false);
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open, setOpen]);
+  }, [setOpen]);
 
   const go = (id: string) => {
     setOpen(false);
@@ -82,10 +83,10 @@ export function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: 
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-xl overflow-hidden rounded-2xl glass-strong shadow-2xl shadow-black/50"
           >
-            <Command shouldFilter={false} loop>
+              <CommandMenu shouldFilter={false} loop>
               <div className="flex items-center gap-3 border-b border-white/10 px-4">
                 <Command className="h-4 w-4 text-muted-foreground" />
-                <Command.Input
+                  <CommandMenu.Input
                   autoFocus
                   placeholder="Search sections, links…"
                   value={search}
@@ -94,32 +95,32 @@ export function CommandPalette({ open, setOpen }: { open: boolean; setOpen: (v: 
                 />
                 <kbd className="rounded bg-white/10 px-1.5 py-0.5 text-[10px] text-muted-foreground">ESC</kbd>
               </div>
-              <Command.List className="max-h-[50vh] overflow-auto p-2">
-                <Command.Empty className="px-3 py-6 text-center text-sm text-muted-foreground">
+                <CommandMenu.List className="max-h-[50vh] overflow-auto p-2">
+                  <CommandMenu.Empty className="px-3 py-6 text-center text-sm text-muted-foreground">
                   No results.
-                </Command.Empty>
+                  </CommandMenu.Empty>
                 {['Navigate', 'Links'].map((group) => {
                   const groupItems = filtered.filter((i) => i.group === group);
                   if (!groupItems.length) return null;
                   return (
-                    <Command.Group key={group} heading={group} className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-muted-foreground">
+                      <CommandMenu.Group key={group} heading={group} className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wider [&_[cmdk-group-heading]]:text-muted-foreground">
                       {groupItems.map((item) => (
-                        <Command.Item
+                          <CommandMenu.Item
                           key={item.label}
                           onSelect={() => item.action()}
                           className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 text-sm text-foreground aria-selected:bg-white/5"
                         >
                           <span className="text-muted-foreground">{item.icon}</span>
-                          <span className="flex-1">{item.label}</span>
-                          <span className="text-xs text-muted-foreground">{item.hint}</span>
+                            <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                            <span className="max-w-[40%] truncate text-xs text-muted-foreground">{item.hint}</span>
                           <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground" />
-                        </Command.Item>
+                          </CommandMenu.Item>
                       ))}
-                    </Command.Group>
+                      </CommandMenu.Group>
                   );
                 })}
-              </Command.List>
-            </Command>
+                </CommandMenu.List>
+              </CommandMenu>
           </motion.div>
         </motion.div>
       )}

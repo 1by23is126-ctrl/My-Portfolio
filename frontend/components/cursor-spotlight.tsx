@@ -27,7 +27,7 @@ export function CursorSpotlight() {
   return (
     <motion.div
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[55] h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+      className="pointer-events-none fixed left-0 top-0 z-[12] h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full"
       style={{
         x: sx,
         y: sy,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight, Github, ExternalLink, X, Check, Plus } from 'lucide-react';
 import { projects } from '@/lib/data';
@@ -194,6 +194,22 @@ function ProjectModal({
   project: (typeof projects)[number] | null;
   onClose: () => void;
 }) {
+  useEffect(() => {
+    if (!project) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [project, onClose]);
+
   return (
     <AnimatePresence>
       {project && (
@@ -202,6 +218,9 @@ function ProjectModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${project.name} case study`}
           className="fixed inset-0 z-[80] flex items-start justify-center overflow-y-auto bg-ink-950/85 px-4 py-10 backdrop-blur-md sm:items-center"
         >
           <motion.div
@@ -251,7 +270,7 @@ function ProjectModal({
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-3 gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
+              <div className="mt-6 grid grid-cols-1 gap-3 rounded-2xl border border-white/10 bg-white/[0.02] p-4 sm:grid-cols-3">
                 {project.impact.map((m) => (
                   <div key={m.label} className="text-center">
                     <p className="font-display text-lg font-bold text-foreground">{m.value}</p>

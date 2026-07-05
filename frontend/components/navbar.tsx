@@ -104,6 +104,8 @@ export function Navbar({ onCommand }: { onCommand: () => void }) {
               onClick={() => setOpen((v) => !v)}
               className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-foreground md:hidden"
               aria-label="Toggle menu"
+              aria-expanded={open}
+              aria-controls="mobile-nav-menu"
             >
               {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
@@ -117,6 +119,7 @@ export function Navbar({ onCommand }: { onCommand: () => void }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            id="mobile-nav-menu"
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-2 bg-ink-950/95 backdrop-blur-xl md:hidden"
           >
             {links.map((l, i) => (

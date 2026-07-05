@@ -137,6 +137,7 @@ export function Contact() {
           >
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <FormField
+                id="contact-name"
                 label="Name"
                 value={form.name}
                 onChange={(v) => setForm({ ...form, name: v })}
@@ -144,6 +145,7 @@ export function Contact() {
                 placeholder="Your name"
               />
               <FormField
+                id="contact-email"
                 label="Email"
                 type="email"
                 value={form.email}
@@ -154,14 +156,16 @@ export function Contact() {
             </div>
 
             <div>
-              <label className="mb-2 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              <label htmlFor="contact-message" className="mb-2 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Message
               </label>
               <textarea
+                id="contact-message"
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 rows={5}
                 placeholder="Tell me about your project, role, or idea…"
+                aria-invalid={Boolean(errors.message)}
                 className={cn(
                   'w-full resize-none border-0 border-b bg-transparent px-0 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/50',
                   errors.message ? 'border-red-500/50' : 'border-white/10 focus:border-gold/50'
@@ -173,6 +177,7 @@ export function Contact() {
             <button
               type="submit"
               disabled={status === 'loading' || status === 'success'}
+              aria-busy={status === 'loading'}
               className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gold-gradient px-8 py-3.5 text-sm font-semibold text-ink-950 shadow-lg shadow-gold/20 transition-transform disabled:opacity-80"
             >
               <AnimatePresence mode="wait">
@@ -219,6 +224,7 @@ export function Contact() {
 }
 
 function FormField({
+  id,
   label,
   value,
   onChange,
@@ -226,6 +232,7 @@ function FormField({
   placeholder,
   type = 'text',
 }: {
+  id: string;
   label: string;
   value: string;
   onChange: (v: string) => void;
@@ -235,14 +242,16 @@ function FormField({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+      <label htmlFor={id} className="mb-2 block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
         {label}
       </label>
       <input
+        id={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        aria-invalid={Boolean(error)}
         className={cn(
           'w-full border-0 border-b bg-transparent px-0 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground/50',
           error ? 'border-red-500/50' : 'border-white/10 focus:border-gold/50'
