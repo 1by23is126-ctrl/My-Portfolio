@@ -77,22 +77,28 @@ export function Background() {
     <div aria-hidden className="fixed inset-0 -z-10 overflow-hidden bg-ink-950">
       {/* Aurora orbs */}
       <motion.div
-        style={{ x: sx, y: sy }}
-        className="absolute -left-40 -top-40 h-[600px] w-[600px] rounded-full opacity-50 blur-[120px]"
-      >
-        <div className="h-full w-full animate-aurora rounded-full bg-gold/10" />
-      </motion.div>
-      <motion.div
         style={{ x: useSpring(useTransform(sx, (v) => -v), { stiffness: 40, damping: 40 }), y: useSpring(useTransform(sy, (v) => -v), { stiffness: 40, damping: 40 }) }}
-        className="absolute -right-40 top-1/3 h-[500px] w-[500px] rounded-full opacity-40 blur-[120px]"
+        className="absolute -right-56 top-1/4 h-[760px] w-[760px] rounded-full opacity-35"
       >
-        <div className="h-full w-full animate-aurora rounded-full bg-white/[0.04] [animation-delay:-7s]" />
+        <div
+          className="h-full w-full animate-aurora rounded-full [animation-delay:-7s]"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.045) 34%, rgba(255,255,255,0.02) 56%, transparent 74%)',
+          }}
+        />
       </motion.div>
       <motion.div
         style={{ x: useSpring(useTransform(sx, (v) => v * 0.5), { stiffness: 40, damping: 40 }), y: useSpring(useTransform(sy, (v) => v * 0.5), { stiffness: 40, damping: 40 }) }}
-        className="absolute bottom-0 left-1/2 h-[450px] w-[450px] rounded-full opacity-30 blur-[120px]"
+        className="absolute -bottom-48 left-1/2 h-[700px] w-[700px] -translate-x-1/2 rounded-full opacity-28"
       >
-        <div className="h-full w-full animate-aurora rounded-full bg-gold/8 [animation-delay:-13s]" />
+        <div
+          className="h-full w-full animate-aurora rounded-full [animation-delay:-13s]"
+          style={{
+            background:
+              'radial-gradient(circle, rgba(212,175,55,0.14) 0%, rgba(212,175,55,0.06) 34%, rgba(212,175,55,0.02) 56%, transparent 76%)',
+          }}
+        />
       </motion.div>
 
       {/* Grid */}

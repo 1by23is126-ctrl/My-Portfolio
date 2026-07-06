@@ -17,75 +17,44 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 // Timings — sequence: name → tagline (roles) → subtitle → buttons ~150ms apart
 const NAME_START = 0.2;
-const NAME_LETTERS_STAGGER = 0.05;
 const AFTER_NAME = 1.65;
 const TAGLINE_DELAY = AFTER_NAME + 0.15;    // name → tagline
 const SUBTITLE_DELAY = TAGLINE_DELAY + 0.15; // tagline → subtitle
 const BUTTONS_DELAY = SUBTITLE_DELAY + 0.15; // subtitle → buttons
 const LOCATION_DELAY = BUTTONS_DELAY + 0.15;
 
-const nameContainer: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: NAME_LETTERS_STAGGER, delayChildren: NAME_START },
-  },
-};
-
-const letterVariant: Variants = {
-  hidden: { y: 20, opacity: 0, filter: 'blur(8px)' },
+// Whole-word entrance variants — background-clip:text CANNOT be used on child spans
+// inside a Framer Motion animated parent: Chrome composites the parent into its own
+// GPU layer and renders each span's full bounding box instead of the glyph mask.
+// Solution: animate the h1/h2 as single units; background-clip:text lives directly
+// on the element that contains the raw text nodes (no intervening child spans).
+const nameVariant: Variants = {
+  hidden: { y: 28, opacity: 0 },
   visible: {
     y: 0,
     opacity: 1,
-    filter: 'blur(0px)',
-    transition: { duration: 1, ease: EASE },
+    transition: { duration: 1, delay: NAME_START, ease: EASE },
   },
 };
 
-const lastNameContainer: Variants = {
-  hidden: {},
+const lastNameVariant: Variants = {
+  hidden: { y: 20, opacity: 0 },
   visible: {
-    transition: {
-      staggerChildren: NAME_LETTERS_STAGGER,
-      delayChildren: NAME_START + 0.35,
-    },
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.9, delay: NAME_START + 0.35, ease: EASE },
   },
 };
-
-function SplitLetters({
-  text,
-  className,
-  variants = letterVariant,
-}: {
-  text: string;
-  className?: string;
-  variants?: Variants;
-}) {
-  return (
-    <span className={`inline-flex overflow-hidden ${className ?? ''}`} aria-label={text}>
-      {text.split('').map((ch, i) => (
-        <span key={i} className="inline-block overflow-hidden">
-          <motion.span
-            variants={variants}
-            className="inline-block will-change-transform"
-            style={{ transform: 'translate3d(0, 0, 0)' }}
-          >
-            {ch === ' ' ? '\u00A0' : ch}
-          </motion.span>
-        </span>
-      ))}
-    </span>
-  );
-}
 
 export function Hero() {
   const heroRef = useRef<HTMLElement>(null);
   const shouldReduceMotion = useReducedMotion();
 
-  // Magnetic tilt for name — driven by pointer position within hero
-  const tiltX = useMotionValue(0); // rotateX target (deg)
-  const tiltY = useMotionValue(0); // rotateY target (deg)
-  const tiltXSpring = useSpring(tiltX, { stiffness: 60, damping: 22, mass: 1.2 });
-  const tiltYSpring = useSpring(tiltY, { stiffness: 60, damping: 22, mass: 1.2 });
+  // Cursor-driven name interaction using 2D translation to avoid 3D text raster artifacts
+  const moveX = useMotionValue(0);
+  const moveY = useMotionValue(0);
+  const moveXSpring = useSpring(moveX, { stiffness: 60, damping: 22, mass: 1.2 });
+  const moveYSpring = useSpring(moveY, { stiffness: 60, damping: 22, mass: 1.2 });
 
   // Scroll-driven scale/opacity kept for polish
   const { scrollYProgress } = useScroll({
@@ -101,20 +70,19 @@ export function Hero() {
     if (shouldReduceMotion) {
       return;
     }
-    const MAX_DEG = 5; // 4-6deg range
+    const MAX_MOVE = 10;
     const handle = (e: MouseEvent) => {
       const rect = el.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
       const cy = rect.top + rect.height / 2;
       const dx = (e.clientX - cx) / (rect.width / 2); // -1..1
       const dy = (e.clientY - cy) / (rect.height / 2);
-      // rotateY follows horizontal, rotateX inverse of vertical
-      tiltY.set(Math.max(-MAX_DEG, Math.min(MAX_DEG, dx * MAX_DEG)));
-      tiltX.set(Math.max(-MAX_DEG, Math.min(MAX_DEG, -dy * MAX_DEG)));
+      moveX.set(Math.max(-MAX_MOVE, Math.min(MAX_MOVE, dx * MAX_MOVE)));
+      moveY.set(Math.max(-MAX_MOVE, Math.min(MAX_MOVE, dy * MAX_MOVE)));
     };
     const reset = () => {
-      tiltX.set(0);
-      tiltY.set(0);
+      moveX.set(0);
+      moveY.set(0);
     };
     el.addEventListener('mousemove', handle);
     el.addEventListener('mouseleave', reset);
@@ -122,7 +90,7 @@ export function Hero() {
       el.removeEventListener('mousemove', handle);
       el.removeEventListener('mouseleave', reset);
     };
-  }, [shouldReduceMotion, tiltX, tiltY]);
+  }, [moveX, moveY, shouldReduceMotion]);
 
   return (
     <motion.section
@@ -183,54 +151,34 @@ export function Hero() {
       >
         <motion.div
           style={{
-            rotateX: shouldReduceMotion ? 0 : tiltXSpring,
-            rotateY: shouldReduceMotion ? 0 : tiltYSpring,
-            transformStyle: 'preserve-3d',
+            x: shouldReduceMotion ? 0 : moveXSpring,
+            y: shouldReduceMotion ? 0 : moveYSpring,
           }}
-          className="hero-name-gradient relative will-change-transform"
+          className="relative"
         >
-          <motion.h1
-            variants={nameContainer}
-            initial="hidden"
-            animate="visible"
-            className="hero-name relative font-display font-bold leading-[0.9] text-foreground"
-            style={{ fontSize: 'clamp(3.5rem, 14vw, 12rem)', letterSpacing: '-0.035em' }}
-            data-testid="hero-name-first"
-          >
-            <span className="block overflow-hidden">
-              <SplitLetters text={profile.firstName} />
-            </span>
-
-            <span
-              aria-hidden
-              className="hero-name-shimmer pointer-events-none absolute inset-0"
-              style={{
-                fontSize: 'clamp(3.5rem, 14vw, 12rem)',
-                letterSpacing: '-0.035em',
-              }}
+          <div className="hero-name-gradient">
+            <motion.h1
+              variants={nameVariant}
+              initial="hidden"
+              animate="visible"
+              className="hero-name hero-name-text relative font-display font-bold leading-[0.9]"
+              style={{ fontSize: 'clamp(3.5rem, 14vw, 12rem)', letterSpacing: '-0.035em' }}
+              data-testid="hero-name-first"
             >
-              <span className="block">
-                {profile.firstName.split('').map((ch, i) => (
-                  <span key={i} className="inline-block">
-                    {ch === ' ' ? '\u00A0' : ch}
-                  </span>
-                ))}
-              </span>
-            </span>
-          </motion.h1>
+              {profile.firstName}
+            </motion.h1>
 
-          <motion.h2
-            variants={lastNameContainer}
-            initial="hidden"
-            animate="visible"
-            className="hero-name-sub mt-1 font-display font-bold leading-none text-gold text-center"
-            style={{ fontSize: 'clamp(1.75rem, 5vw, 3.5rem)', letterSpacing: '0.18em' }}
-            data-testid="hero-name-last"
-          >
-            <span className="inline-flex overflow-hidden">
-              <SplitLetters text={profile.lastName} />
-            </span>
-          </motion.h2>
+            <motion.h2
+              variants={lastNameVariant}
+              initial="hidden"
+              animate="visible"
+              className="hero-name-sub mt-1 font-display font-bold leading-none text-gold text-center"
+              style={{ fontSize: 'clamp(1.75rem, 5vw, 3.5rem)', letterSpacing: '0.18em' }}
+              data-testid="hero-name-last"
+            >
+              {profile.lastName}
+            </motion.h2>
+          </div>
         </motion.div>
 
         {/* Editorial divider with index marker */}
