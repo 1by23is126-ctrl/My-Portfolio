@@ -69,64 +69,82 @@ export const skills = [
   },
 ];
 
-export const projects = [
+export type Project = {
+  id: string;
+  title: string;
+  category: string;
+  tagline: string;
+  description: string;
+  techStack: string[];
+  features: string[];
+  challenges: string[];
+  role: string;
+  image: string;
+  liveUrl?: string;
+  githubUrl?: string;
+};
+
+export const projects: Project[] = [
   {
-    id: 'moodifyai',
-    name: 'MoodifyAI',
+    id: 'moodify-ai',
+    title: 'Moodify AI',
     category: 'AI · Web App',
-    tags: ['React', 'Python', 'Flask', 'Sentiment Analysis', 'Spotify API'],
-    year: '2024',
-    summary:
-      'An AI-powered music recommendation platform that understands user emotions using sentiment analysis and recommends personalized songs tailored to how you feel.',
-    problem:
-      'Listeners struggled to find music that matched their mood. Existing platforms relied on generic algorithms that ignored emotional context entirely.',
-    solution:
-      'Built a sentiment-analysis engine that reads user input — text or voice — classifies the emotional state, and maps it to curated playlists via the Spotify API.',
-    challenges:
-      'Training the sentiment model on limited labeled data and keeping real-time inference under 200ms required lightweight NLP and aggressive caching.',
-    impact: [
-      { label: 'Mood accuracy', value: '89%' },
-      { label: 'Avg. latency', value: '<200ms' },
-      { label: 'Songs indexed', value: '10k+' },
-    ],
+    tagline: 'AI-powered multilingual music recommendation platform.',
+    description:
+      "Moodify AI is a GenAI-powered web application that analyzes a user's mood through natural language input and recommends personalized songs across multiple languages. It integrates Spotify for album artwork and delivers recommendations through a modern cinematic user experience.",
+    techStack: ['React', 'Vite', 'Python', 'Flask', 'Tailwind CSS', 'Spotify API'],
     features: [
-      'Real-time emotion detection from text input',
-      'Personalized Spotify playlist generation',
-      'Mood history & listening insights',
-      'Clean, responsive, premium UI',
+      'AI mood analysis',
+      'Smart music recommendations',
+      'Spotify album artwork',
+      'Multi-language support',
+      'Responsive UI',
+      'Cinematic animations',
     ],
-    accent: 'from-gold-light to-gold',
-    image:
-      'https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    challenges: [
+      'Mood classification',
+      'Recommendation accuracy',
+      'Spotify integration',
+      'Performance optimization',
+      'Dynamic language handling',
+    ],
+    role:
+      'Designed and developed the entire application, including frontend, backend, AI integration, Spotify integration, UI/UX, and deployment.',
+    image: '/projects/moodify-ai.png',
+    liveUrl: 'https://moodify-ai-gamma.vercel.app/',
+    githubUrl: '',
   },
   {
-    id: 'nextgen-interiors',
-    name: 'NextGen Interiors',
-    category: 'Frontend · Studio',
-    tags: ['Next.js', 'Framer Motion', 'Tailwind CSS', 'Lenis'],
-    year: '2024',
-    summary:
-      'A luxury interior design website featuring cinematic animations, immersive storytelling, premium UI, and modern frontend engineering that elevates the brand.',
-    problem:
-      'The studio’s existing site felt flat and failed to convey the craftsmanship and luxury of their work, leading to low inquiry rates.',
-    solution:
-      'Designed a scroll-driven narrative with cinematic transitions, immersive project showcases, and a refined, editorial layout that mirrors the studio’s aesthetic.',
-    challenges:
-      'Balancing heavy motion with performance on mobile required careful asset optimization, lazy loading, and a reduced-motion fallback.',
-    impact: [
-      { label: 'Inquiry rate', value: '+45%' },
-      { label: 'Avg. session', value: '3m 40s' },
-      { label: 'Lighthouse', value: '96' },
-    ],
+    id: 'centralops',
+    title: 'CentralOps',
+    category: 'Enterprise · Web App',
+    tagline: 'Enterprise operations management platform.',
+    description:
+      'CentralOps is a full-stack enterprise management platform that centralizes employee management, task assignment, meetings, attendance, compliance tracking, and analytics through a modern role-based dashboard designed for organizations.',
+    techStack: ['React', 'Node.js', 'Express', 'Tailwind CSS'],
     features: [
-      'Scroll-driven cinematic storytelling',
-      'Immersive project gallery with parallax',
-      'Premium editorial typography',
-      'Fully responsive with reduced-motion support',
+      'Role-based authentication',
+      'Employee management',
+      'Task management',
+      'Meeting scheduler',
+      'Attendance tracking',
+      'Compliance management',
+      'Analytics dashboard',
+      'Notifications',
+      'Enterprise dashboard',
     ],
-    accent: 'from-gold to-gold-dark',
-    image:
-      'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    challenges: [
+      'Role-based architecture',
+      'Scalable dashboard design',
+      'Enterprise workflow optimization',
+      'Data organization',
+      'Responsive interface',
+    ],
+    role:
+      'Designed and developed the complete platform including UI/UX, frontend, backend, reusable components, authentication, dashboards, and workflow management.',
+    image: '/projects/centralops.png',
+    liveUrl: 'https://central-o-ps.vercel.app/login',
+    githubUrl: '',
   },
 ];
 
