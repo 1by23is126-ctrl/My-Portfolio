@@ -8,7 +8,7 @@ export const profile = {
   tagline: 'Building premium digital experiences with modern web technologies and Artificial Intelligence.',
   location: 'Bengaluru, Karnataka, India',
   availability: 'Available for internships & freelance opportunities',
-  email: 'mrinanktc@gmail.com',
+  email: '1by23is126@bmsit.in',
   bio: 'I am a passionate Information Science Engineering student who enjoys building modern web applications, AI-powered products, and premium user experiences. I love combining clean engineering with elegant UI/UX to create products that are both functional and visually impressive. I continuously explore new technologies, improve my design skills, and enjoy solving real-world problems through software.',
   socials: [
     { label: 'GitHub', href: 'https://github.com/mrinanktc', icon: 'github' },
@@ -152,7 +152,7 @@ export const experience = [
   {
     role: 'Full Stack Developer — Freelance',
     company: 'Self-employed',
-    period: '2023 — Present',
+    period: '2024 — Present',
     location: 'Remote',
     description:
       'Building modern web applications and AI-powered products for clients — from concept and design to deployment.',
@@ -165,7 +165,7 @@ export const experience = [
   {
     role: 'Web Development Intern',
     company: 'Startup (Bengaluru)',
-    period: '2023',
+    period: '2026',
     location: 'Bengaluru, India',
     description:
       'Contributed to a production web app, building features across the stack and improving UI performance.',
@@ -181,7 +181,7 @@ export const education = [
   {
     degree: 'B.E. in Information Science & Engineering',
     school: 'BMS Institute of Technology & Management',
-    period: '2021 — 2025',
+    period: '2023 — 2027',
     description:
       'Pursuing a degree in Information Science & Engineering with a CGPA of 7.2. Focused on web technologies, AI, and software engineering fundamentals.',
   },

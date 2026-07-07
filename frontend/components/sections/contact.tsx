@@ -83,7 +83,9 @@ export function Contact() {
 
             <div className="space-y-5">
               <a
-                href={`mailto:${profile.email}`}
+                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${profile.email}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="group flex items-center gap-4 border-b border-white/10 pb-4 transition-colors hover:border-gold/30"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.03]">

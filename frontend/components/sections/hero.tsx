@@ -190,7 +190,7 @@ export function Hero() {
         >
           <span className="h-px w-12 editorial-line" />
           <span className="font-display text-[10px] font-medium uppercase tracking-[0.4em] text-muted-foreground">
-            Portfolio — 2025
+            Portfolio — 2026
           </span>
           <span className="h-px w-12 editorial-line" />
         </motion.div>
