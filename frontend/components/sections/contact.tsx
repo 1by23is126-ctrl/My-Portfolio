@@ -116,7 +116,7 @@ export function Contact() {
                   key={s.label}
                   href={s.href}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   className="group flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-gold"
                 >
                   {s.label}

@@ -13,7 +13,6 @@ import {
   Mail,
   Github,
   Linkedin,
-  Twitter,
   FileText,
 } from 'lucide-react';
 
@@ -53,9 +52,8 @@ export function CommandPalette({ open, setOpen }: { open: boolean; setOpen: Reac
       { label: 'About', hint: 'Bio & capabilities', icon: <User className="h-4 w-4" />, action: () => go('about'), group: 'Navigate' },
       { label: 'Journey', hint: 'Experience & education', icon: <Code2 className="h-4 w-4" />, action: () => go('experience'), group: 'Navigate' },
       { label: 'Contact', hint: 'Get in touch', icon: <Mail className="h-4 w-4" />, action: () => go('contact'), group: 'Navigate' },
-      { label: 'GitHub', hint: 'github.com/mrinanktc', icon: <Github className="h-4 w-4" />, action: () => window.open('https://github.com/mrinanktc', '_blank'), group: 'Links' },
-      { label: 'LinkedIn', hint: 'in/mrinanktc', icon: <Linkedin className="h-4 w-4" />, action: () => window.open('https://linkedin.com/in/mrinanktc', '_blank'), group: 'Links' },
-      { label: 'Twitter', hint: '@mrinanktc', icon: <Twitter className="h-4 w-4" />, action: () => window.open('https://twitter.com/mrinanktc', '_blank'), group: 'Links' },
+      { label: 'GitHub', hint: '1by23is126-ctrl', icon: <Github className="h-4 w-4" />, action: () => window.open('https://github.com/1by23is126-ctrl?tab=repositories', '_blank'), group: 'Links' },
+      { label: 'LinkedIn', hint: 'mrinank-t-c', icon: <Linkedin className="h-4 w-4" />, action: () => window.open('https://www.linkedin.com/in/mrinank-t-c-1b38ba290/', '_blank'), group: 'Links' },
       { label: 'Resume', hint: 'Download PDF', icon: <FileText className="h-4 w-4" />, action: () => window.open('#', '_blank'), group: 'Links' },
     ],
     [setOpen]

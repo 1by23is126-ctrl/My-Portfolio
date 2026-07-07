@@ -11,9 +11,8 @@ export const profile = {
   email: '1by23is126@bmsit.in',
   bio: 'I am a passionate Information Science Engineering student who enjoys building modern web applications, AI-powered products, and premium user experiences. I love combining clean engineering with elegant UI/UX to create products that are both functional and visually impressive. I continuously explore new technologies, improve my design skills, and enjoy solving real-world problems through software.',
   socials: [
-    { label: 'GitHub', href: 'https://github.com/mrinanktc', icon: 'github' },
-    { label: 'LinkedIn', href: 'https://linkedin.com/in/mrinanktc', icon: 'linkedin' },
-    { label: 'Twitter', href: 'https://twitter.com/mrinanktc', icon: 'twitter' },
+    { label: 'GitHub', href: 'https://github.com/1by23is126-ctrl?tab=repositories', icon: 'github' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mrinank-t-c-1b38ba290/', icon: 'linkedin' },
   ],
 };
 
