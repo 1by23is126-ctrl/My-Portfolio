@@ -11,10 +11,14 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 type Status = 'idle' | 'loading' | 'success';
 type Errors = { name?: string; email?: string; message?: string };
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL ?? '';
+const CONTACT_API_URL = `${BACKEND_URL}/api/contact`;
+
 export function Contact() {
   const [status, setStatus] = useState<Status>('idle');
   const [form, setForm] = useState({ name: '', email: '', message: '' });
   const [errors, setErrors] = useState<Errors>({});
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validate = () => {
     const e: Errors = {};
@@ -29,10 +33,29 @@ export function Contact() {
     ev.preventDefault();
     if (!validate()) return;
     setStatus('loading');
-    await new Promise((r) => setTimeout(r, 1400));
-    setStatus('success');
-    setForm({ name: '', email: '', message: '' });
-    setTimeout(() => setStatus('idle'), 4000);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch(CONTACT_API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Contact request failed with status ${response.status}`);
+      }
+
+      setStatus('success');
+      setForm({ name: '', email: '', message: '' });
+      setTimeout(() => setStatus('idle'), 4000);
+    } catch (error) {
+      console.error('Failed to submit contact form', error);
+      setStatus('idle');
+      setSubmitError('Unable to send your message right now. Please try again.');
+    }
   };
 
   return (
@@ -218,6 +241,8 @@ export function Contact() {
                 )}
               </AnimatePresence>
             </button>
+
+            {submitError && <p className="text-sm text-red-400">{submitError}</p>}
           </motion.form>
         </div>
       </div>
